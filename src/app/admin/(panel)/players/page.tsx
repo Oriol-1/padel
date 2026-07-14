@@ -15,6 +15,8 @@ export default async function PlayersPage({ searchParams }: { searchParams: Prom
     {params.accessRevoked ? <div className="alert alert-success">Acceso personal revocado. Los enlaces de sesión anteriores ya no serán válidos.</div> : null}
     {params.error ? <div className="alert alert-error">No se pudo completar la operación. Revisa los datos o posibles duplicados.</div> : null}
 
+    {env.DEMO_MODE ? <section className="portal-callout"><div className="portal-callout-icon">P</div><div><p className="eyebrow">Nueva experiencia</p><h2>Área privada del jugador</h2><p>Comprueba cómo Sandra ve únicamente sus próximos partidos confirmados o seleccionados.</p></div><a className="button button-accent" href="/api/admin/players/demo-player-sandra/preview-portal" target="_blank" rel="noreferrer">Abrir como Sandra</a></section> : null}
+
     <details className="card quick-create" open={active.length === 0}>
       <summary><span><strong>Añadir jugador</strong><small>Alta rápida con los datos esenciales</small></span><span className="summary-action">Nuevo</span></summary>
       <form action="/api/admin/players" method="post" className="form-grid details-content">
@@ -38,7 +40,7 @@ export default async function PlayersPage({ searchParams }: { searchParams: Prom
           <td>{player.phone}<br /><span className="muted small">{player.email ?? "Sin correo"}</span></td>
           <td>{player.category ?? "Sin grupo"}<br /><span className="muted small">{player.level ?? "Nivel no indicado"}</span></td>
           <td><span className={`consent-dot ${player.whatsappConsent ? "is-on" : ""}`} />{player.whatsappConsent ? "Autorizado" : "Pendiente"}</td>
-          <td><div className="row-actions"><form action={`/api/admin/players/${player.id}/revoke-access`} method="post"><button className="icon-action" type="submit" disabled={env.DEMO_MODE} title="Revocar acceso personal">Revocar acceso</button></form><form action={`/api/admin/players/${player.id}/archive`} method="post"><button className="button button-secondary" type="submit" disabled={env.DEMO_MODE}>Descartar</button></form></div></td>
+          <td><div className="row-actions"><a className="button button-primary button-compact" href={`/api/admin/players/${player.id}/preview-portal`} target="_blank" rel="noreferrer">Ver su área</a><form action={`/api/admin/players/${player.id}/revoke-access`} method="post"><button className="icon-action" type="submit" disabled={env.DEMO_MODE} title="Revocar acceso personal">Revocar</button></form><form action={`/api/admin/players/${player.id}/archive`} method="post"><button className="button button-secondary button-compact" type="submit" disabled={env.DEMO_MODE}>Descartar</button></form></div></td>
         </tr>)}
       </tbody></table></div>
     </section>

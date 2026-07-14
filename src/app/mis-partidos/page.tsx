@@ -7,7 +7,8 @@ import { StatusBadge } from "@/components/StatusBadge";
 
 export const dynamic = "force-dynamic";
 
-export default async function MyMatchesPage() {
+export default async function MyMatchesPage({ searchParams }: { searchParams: Promise<{ preview?: string }> }) {
+  const query = await searchParams;
   const session = await getPlayerSession();
   const portal = session ? await listSelectedEventsForPlayer(session.playerId, session.version) : null;
 
@@ -17,6 +18,7 @@ export default async function MyMatchesPage() {
   </div></main>;
 
   return <main className="player-portal"><div className="player-shell">
+    {query.preview ? <div className="preview-ribbon"><strong>Vista del jugador</strong><span>Estás viendo exactamente lo que verá {portal.player.firstName}.</span><Link href="/admin/players">Volver al panel</Link></div> : null}
     <header className="player-header"><div className="player-brand"><span className="brand-mark">P</span><span><strong>{env.CLUB_NAME}</strong><small>Área del jugador</small></span></div><form action="/api/player/logout" method="post"><button className="quiet-button" type="submit">Cerrar acceso</button></form></header>
     <section className="player-welcome"><p className="eyebrow">Tu calendario deportivo</p><h1>Hola, {portal.player.firstName}</h1><p className="muted">Aquí aparecen únicamente los próximos partidos donde tienes plaza confirmada o has sido seleccionado.</p></section>
     {portal.events.length === 0 ? <section className="player-empty card"><span className="empty-icon">✓</span><h2>No tienes partidos confirmados</h2><p className="muted">Cuando confirmes una plaza o seas seleccionado, aparecerá aquí automáticamente.</p></section> : <section className="match-list" aria-label="Próximos partidos">

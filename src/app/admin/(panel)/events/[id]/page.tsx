@@ -58,7 +58,7 @@ export default async function EventDetailPage({ params, searchParams }: { params
         <td><strong>{invitation.player.firstName} {invitation.player.lastName}</strong><br /><span className="muted small">{invitation.player.phone}</span></td>
         <td><StatusBadge value={invitation.response} />{invitation.responseNote ? <><br /><span className="small muted">{invitation.responseNote}</span></> : null}</td>
         <td>{invitation.messageStatus ?? invitation.status}<br /><span className="muted small">{invitation.messageSentAt ? formatDateTime(invitation.messageSentAt) : "No enviado"}</span></td>
-        <td><a href={invitation.previewLink} target="_blank" rel="noreferrer">Abrir como jugador</a></td>
+        <td><a className="button button-secondary button-compact" href={invitation.previewLink} target="_blank" rel="noreferrer">Ver invitación</a></td>
         <td><form action={`/api/admin/invitations/${invitation.id}/status`} method="post" className="actions">
           <select name="response" defaultValue={invitation.response} aria-label={`Estado de ${invitation.player.firstName}`}>
             {["PENDING", "AVAILABLE", "CONFIRMED", "WAITLISTED", "SELECTED", "NOT_SELECTED", "DECLINED", "CANCELLED"].map((value) => <option value={value} key={value}>{playerResponseLabel(value)}</option>)}
