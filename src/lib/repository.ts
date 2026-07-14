@@ -19,7 +19,7 @@ const messageSelect = (a?: string) => `${c(a,"id")} AS "id", ${c(a,"invitation_i
   ${c(a,"read_at")} AS "readAt", ${c(a,"created_at")} AS "createdAt", ${c(a,"updated_at")} AS "updatedAt"`;
 
 export async function getDashboardStats() {
-  if (env.DEMO_MODE) return { players: demoPlayers.length, events: demoEvents.length, pending: 3 };
+  if (env.DEMO_MODE) return { players: demoPlayers.filter((player) => player.active).length, events: demoEvents.length, pending: 3 };
   const [players, events, pending] = await Promise.all([
     query<{ count: string }>("SELECT COUNT(*)::text AS count FROM players WHERE active = TRUE"),
     query<{ count: string }>("SELECT COUNT(*)::text AS count FROM events"),
@@ -56,18 +56,14 @@ export async function createPlayer(data: Omit<Player, "id" | "active" | "consent
   });
 }
 
-export async function deletePlayer(id: string, actor: string) {
+export async function setPlayerActive(id: string, active: boolean, actor: string) {
+  if (env.DEMO_MODE) return demoPlayers.some((player) => player.id === id);
   return transaction(async (client) => {
-    const result = await client.query<{ id: string; firstName: string; lastName: string }>(`
-      SELECT id,first_name AS "firstName",last_name AS "lastName" FROM players WHERE id=$1 FOR UPDATE`, [id]);
+    const result = await client.query<{ id: string; firstName: string; lastName: string }>(`UPDATE players SET active=$2,updated_at=NOW()
+      WHERE id=$1 RETURNING id,first_name AS "firstName",last_name AS "lastName"`, [id, active]);
     const player = result.rows[0];
     if (!player) return false;
-    const countResult = await client.query<{ count: string }>("SELECT COUNT(*)::text AS count FROM invitations WHERE player_id=$1", [id]);
-    await addAudit(client, actor, "PLAYER_DELETED", "Player", id, {
-      name: `${player.firstName} ${player.lastName}`,
-      invitationCount: Number(countResult.rows[0].count)
-    });
-    await client.query("DELETE FROM players WHERE id=$1", [id]);
+    await addAudit(client, actor, active ? "PLAYER_RESTORED" : "PLAYER_ARCHIVED", "Player", id, { name: `${player.firstName} ${player.lastName}` });
     return true;
   });
 }

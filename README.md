@@ -16,7 +16,7 @@ Esta entrega es un MVP ejecutable y preparado para una prueba real controlada. I
 - Control transaccional de plazas y lista de espera.
 - Selección manual de jugadores desde administración.
 - Gestión master para editar, duplicar y eliminar convocatorias.
-- Eliminación administrativa de jugadores y sus datos asociados.
+- Archivado y restauración de jugadores sin perder invitaciones ni historial.
 - Recordatorios masivos a todos los jugadores convocados.
 - Modo WhatsApp de prueba sin enviar mensajes reales.
 - Conector preparado para WhatsApp Business Platform Cloud API.

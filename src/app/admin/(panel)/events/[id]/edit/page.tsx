@@ -10,7 +10,7 @@ export default async function EditEventPage({ params, searchParams }: { params: 
   const detail = await getEventWithInvitations(id);
   if (!detail) notFound();
   const { event } = detail;
-  return <main className="page"><div className="container"><p><Link href={`/admin/events/${id}`}>← Volver a la convocatoria</Link></p><h1>Editar convocatoria</h1>
+  return <main className="page"><div className="container"><p><Link href={`/admin/events/${id}`}>← Volver a la convocatoria</Link></p><p className="eyebrow">Ajustes esenciales</p><h1>Editar convocatoria</h1>
     <p className="muted">Modifica los datos y la fecha. Los jugadores convocados se conservan.</p>
     {query.duplicated ? <div className="alert alert-success">Copia creada. Cambia la fecha antes de enviarla.</div> : null}
     {query.error ? <div className="alert alert-error">No se pudo guardar: {decodeURIComponent(query.error)}</div> : null}
@@ -23,10 +23,12 @@ export default async function EditEventPage({ params, searchParams }: { params: 
       <div className="field"><label htmlFor="deadlineAt">Límite de respuesta</label><input id="deadlineAt" name="deadlineAt" type="datetime-local" defaultValue={utcToClubDateTimeInput(event.deadlineAt)} required /></div>
       <div className="field"><label htmlFor="capacity">Plazas</label><input id="capacity" name="capacity" type="number" min="1" max="100" defaultValue={event.capacity} required /></div>
       <div className="field"><label htmlFor="venue">Club o sede</label><input id="venue" name="venue" defaultValue={event.venue} required /></div>
-      <div className="field"><label htmlFor="address">Dirección</label><input id="address" name="address" defaultValue={event.address ?? ""} /></div>
-      <div className="field"><label htmlFor="category">Categoría</label><input id="category" name="category" defaultValue={event.category ?? ""} /></div>
-      <div className="field"><label htmlFor="priceNote">Precio informativo</label><input id="priceNote" name="priceNote" defaultValue={event.priceNote ?? ""} /></div>
-      <div className="field field-full"><label htmlFor="description">Descripción o indicaciones</label><textarea id="description" name="description" defaultValue={event.description ?? ""} /></div>
+      <details className="advanced-options field-full" open={Boolean(event.address || event.category || event.priceNote || event.description)}><summary>Información adicional</summary><div className="form-grid details-content">
+        <div className="field"><label htmlFor="address">Dirección</label><input id="address" name="address" defaultValue={event.address ?? ""} /></div>
+        <div className="field"><label htmlFor="category">Categoría</label><input id="category" name="category" defaultValue={event.category ?? ""} /></div>
+        <div className="field"><label htmlFor="priceNote">Precio informativo</label><input id="priceNote" name="priceNote" defaultValue={event.priceNote ?? ""} /></div>
+        <div className="field field-full"><label htmlFor="description">Descripción o indicaciones</label><textarea id="description" name="description" defaultValue={event.description ?? ""} /></div>
+      </div></details>
       <div className="field-full actions"><button className="button button-primary" type="submit" disabled={env.DEMO_MODE}>Guardar cambios</button><Link className="button button-secondary" href={`/admin/events/${id}`}>Cancelar</Link></div>
     </form>
   </div></main>;
