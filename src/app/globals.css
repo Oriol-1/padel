@@ -74,6 +74,35 @@ p { text-wrap: pretty; }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: white; font-size: 1rem; font-weight: 760; letter-spacing: -.025em; }
 .brand:hover { text-decoration: none; }
 .brand-mark { display: grid; place-items: center; width: 31px; height: 31px; border-radius: 10px; color: #17300c; background: var(--accent); font-size: .86rem; font-weight: 900; }
+.admin-shell { min-height: 100vh; }
+.admin-content { min-width: 0; min-height: 100vh; margin-left: 264px; }
+.admin-sidebar { position: fixed; inset: 0 auto 0 0; z-index: 30; width: 264px; display: flex; flex-direction: column; padding: 20px 15px 16px; color: white; background: linear-gradient(180deg, #0b241a 0%, #0e3022 58%, #0b271c 100%); border-right: 1px solid rgba(255,255,255,.08); box-shadow: 14px 0 50px rgba(16,35,26,.08); }
+.sidebar-brand { padding: 5px 8px 26px; }
+.sidebar-brand .brand { align-items: center; }
+.sidebar-brand .brand > span:last-child { display: grid; }
+.sidebar-brand .brand strong { color: white; font-size: .96rem; line-height: 1.2; }
+.sidebar-brand .brand small { margin-top: 2px; color: rgba(255,255,255,.46); font-size: .7rem; font-weight: 520; letter-spacing: .02em; }
+.sidebar-nav { display: grid; gap: 5px; }
+.nav-section-label { margin: 0 11px 8px; color: rgba(255,255,255,.38); font-size: .65rem; font-weight: 760; letter-spacing: .13em; text-transform: uppercase; }
+.nav-item { position: relative; width: 100%; display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 1px solid transparent; border-radius: 13px; color: rgba(255,255,255,.68); background: transparent; text-align: left; transition: background .16s ease, color .16s ease, border-color .16s ease, transform .16s ease; }
+.nav-item:hover { color: white; background: rgba(255,255,255,.065); text-decoration: none; }
+.nav-item.is-active { color: white; background: rgba(255,255,255,.105); border-color: rgba(255,255,255,.08); box-shadow: inset 3px 0 0 var(--accent); }
+.nav-item-primary { margin: 8px 0; color: #192609; background: var(--accent); }
+.nav-item-primary:hover, .nav-item-primary.is-active { color: #192609; background: #d3f566; border-color: rgba(255,255,255,.26); box-shadow: 0 9px 26px rgba(0,0,0,.16); transform: translateY(-1px); }
+.nav-icon-wrap { display: grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: rgba(255,255,255,.07); }
+.nav-item-primary .nav-icon-wrap { background: rgba(23,32,10,.09); }
+.nav-icon { width: 19px; height: 19px; }
+.nav-copy { min-width: 0; display: grid; }
+.nav-copy strong { color: inherit; font-size: .84rem; line-height: 1.25; }
+.nav-copy small { margin-top: 2px; color: inherit; opacity: .55; font-size: .68rem; line-height: 1.2; }
+.sidebar-footer { display: grid; gap: 11px; margin-top: auto; }
+.system-state { display: flex; align-items: center; gap: 10px; margin: 0 7px; padding: 11px 10px; border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08); }
+.system-state > span:last-child { display: grid; }
+.system-state strong { color: rgba(255,255,255,.76); font-size: .72rem; }
+.system-state small { color: rgba(255,255,255,.38); font-size: .66rem; }
+.system-dot { width: 8px; height: 8px; border-radius: 50%; background: #79da91; box-shadow: 0 0 0 4px rgba(121,218,145,.1); }
+.logout-item { border: 0; }
+.mobile-admin-bar { display: none; }
 .admin-header { position: sticky; top: 0; z-index: 20; color: white; background: rgba(11, 36, 26, .9); border-bottom: 1px solid rgba(255,255,255,.08); backdrop-filter: saturate(150%) blur(18px); }
 .nav-row { min-height: 68px; display: flex; justify-content: space-between; align-items: center; gap: 28px; }
 .nav-links { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
@@ -177,6 +206,20 @@ footer { padding: 34px 0; color: var(--muted); border-top: 1px solid var(--borde
   .hero { min-height: auto; }
   .hero-grid { grid-template-columns: 1fr; gap: 46px; padding: 76px 0; }
   .hero-panel { max-width: 540px; transform: none; }
+  .admin-content { margin-left: 0; padding-top: 60px; padding-bottom: 78px; }
+  .mobile-admin-bar { position: fixed; inset: 0 0 auto 0; z-index: 32; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: rgba(11,36,26,.94); border-bottom: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(18px); }
+  .mobile-admin-bar .brand { font-size: .9rem; }
+  .mobile-logout { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; color: rgba(255,255,255,.76); background: rgba(255,255,255,.08); border: 0; border-radius: 11px; }
+  .admin-sidebar { inset: auto 0 0; width: 100%; height: 76px; padding: 8px 9px calc(8px + env(safe-area-inset-bottom)); background: rgba(11,36,26,.96); border-top: 1px solid rgba(255,255,255,.1); border-right: 0; box-shadow: 0 -14px 36px rgba(16,35,26,.12); backdrop-filter: blur(18px); }
+  .sidebar-brand, .sidebar-footer, .nav-section-label { display: none; }
+  .sidebar-nav { width: min(560px, 100%); height: 100%; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+  .nav-item, .nav-item-primary { height: 58px; margin: 0; display: grid; justify-items: center; align-content: center; gap: 2px; padding: 4px 2px; border-radius: 11px; background: transparent; box-shadow: none; transform: none; }
+  .nav-item:hover, .nav-item-primary:hover, .nav-item-primary.is-active, .nav-item.is-active { color: white; background: rgba(255,255,255,.09); border-color: transparent; box-shadow: none; transform: none; }
+  .nav-item.is-active::after { content: ""; position: absolute; bottom: 1px; width: 18px; height: 3px; border-radius: 99px; background: var(--accent); }
+  .nav-icon-wrap, .nav-item-primary .nav-icon-wrap { width: 25px; height: 25px; background: transparent; }
+  .nav-icon { width: 20px; height: 20px; }
+  .nav-copy strong { max-width: 100%; overflow: hidden; font-size: .66rem; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-copy small { display: none; }
 }
 @media (max-width: 800px) {
   .container, .narrow { width: min(100% - 28px, 1180px); }
