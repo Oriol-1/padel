@@ -1,7 +1,7 @@
 import { listPlayers } from "@/lib/repository";
 import { env } from "@/lib/env";
 
-export default async function PlayersPage({ searchParams }: { searchParams: Promise<{ created?: string; archived?: string; restored?: string; error?: string }> }) {
+export default async function PlayersPage({ searchParams }: { searchParams: Promise<{ created?: string; archived?: string; restored?: string; accessRevoked?: string; error?: string }> }) {
   const params = await searchParams;
   const players = await listPlayers(false);
   const active = players.filter((player) => player.active);
@@ -12,6 +12,7 @@ export default async function PlayersPage({ searchParams }: { searchParams: Prom
     {params.created ? <div className="alert alert-success">Jugador añadido a la plantilla.</div> : null}
     {params.archived ? <div className="alert alert-success">Jugador trasladado a descartados. Su historial se conserva.</div> : null}
     {params.restored ? <div className="alert alert-success">Jugador restaurado en la plantilla activa.</div> : null}
+    {params.accessRevoked ? <div className="alert alert-success">Acceso personal revocado. Los enlaces de sesión anteriores ya no serán válidos.</div> : null}
     {params.error ? <div className="alert alert-error">No se pudo completar la operación. Revisa los datos o posibles duplicados.</div> : null}
 
     <details className="card quick-create" open={active.length === 0}>
@@ -37,7 +38,7 @@ export default async function PlayersPage({ searchParams }: { searchParams: Prom
           <td>{player.phone}<br /><span className="muted small">{player.email ?? "Sin correo"}</span></td>
           <td>{player.category ?? "Sin grupo"}<br /><span className="muted small">{player.level ?? "Nivel no indicado"}</span></td>
           <td><span className={`consent-dot ${player.whatsappConsent ? "is-on" : ""}`} />{player.whatsappConsent ? "Autorizado" : "Pendiente"}</td>
-          <td><form action={`/api/admin/players/${player.id}/archive`} method="post"><button className="button button-secondary" type="submit" disabled={env.DEMO_MODE}>Descartar</button></form></td>
+          <td><div className="row-actions"><form action={`/api/admin/players/${player.id}/revoke-access`} method="post"><button className="icon-action" type="submit" disabled={env.DEMO_MODE} title="Revocar acceso personal">Revocar acceso</button></form><form action={`/api/admin/players/${player.id}/archive`} method="post"><button className="button button-secondary" type="submit" disabled={env.DEMO_MODE}>Descartar</button></form></div></td>
         </tr>)}
       </tbody></table></div>
     </section>

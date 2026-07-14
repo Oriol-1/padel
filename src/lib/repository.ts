@@ -45,6 +45,52 @@ export async function listPlayers(activeOnly = false) {
   return result.rows;
 }
 
+export async function getPlayerPortalAccess(playerId: string) {
+  if (env.DEMO_MODE) {
+    const player = demoPlayers.find((item) => item.id === playerId && item.active);
+    return player ? { player, version: 1 } : null;
+  }
+  const result = await query<Player & { portalLinkVersion: number }>(`SELECT ${playerSelect("p")},p.portal_link_version AS "portalLinkVersion"
+    FROM players p WHERE p.id=$1 AND p.active=TRUE`, [playerId]);
+  const row = result.rows[0];
+  if (!row) return null;
+  await query("UPDATE players SET portal_accessed_at=NOW() WHERE id=$1", [playerId]);
+  return { player: row, version: row.portalLinkVersion };
+}
+
+export async function listSelectedEventsForPlayer(playerId: string, version: number) {
+  if (env.DEMO_MODE) {
+    const player = demoPlayers.find((item) => item.id === playerId && item.active);
+    if (!player || version !== 1) return null;
+    return {
+      player,
+      events: demoEvents.flatMap((event) => {
+        const invitation = getDemoEventDetail(event.id)?.invitations.find((item) => item.playerId === playerId);
+        return invitation && ["CONFIRMED", "SELECTED"].includes(invitation.response) && event.startsAt >= new Date() ? [{ event, response: invitation.response }] : [];
+      }).sort((a, b) => a.event.startsAt.getTime() - b.event.startsAt.getTime())
+    };
+  }
+  const playerResult = await query<Player & { portalLinkVersion: number }>(`SELECT ${playerSelect("p")},p.portal_link_version AS "portalLinkVersion"
+    FROM players p WHERE p.id=$1 AND p.active=TRUE`, [playerId]);
+  const player = playerResult.rows[0];
+  if (!player || player.portalLinkVersion !== version) return null;
+  const eventsResult = await query<EventRecord & { response: Invitation["response"] }>(`SELECT ${eventSelect("e")},i.response
+    FROM invitations i JOIN events e ON e.id=i.event_id
+    WHERE i.player_id=$1 AND i.response IN ('CONFIRMED','SELECTED') AND e.starts_at>=NOW() AND e.status<>'CANCELLED'
+    ORDER BY e.starts_at ASC`, [playerId]);
+  return { player, events: eventsResult.rows.map((event) => ({ event, response: event.response })) };
+}
+
+export async function revokePlayerPortal(id: string, actor: string) {
+  if (env.DEMO_MODE) return demoPlayers.some((player) => player.id === id);
+  return transaction(async (client) => {
+    const result = await client.query<{ id: string }>("UPDATE players SET portal_link_version=portal_link_version+1,portal_access_revoked_at=NOW(),updated_at=NOW() WHERE id=$1 RETURNING id", [id]);
+    if (!result.rows[0]) return false;
+    await addAudit(client, actor, "PLAYER_PORTAL_REVOKED", "Player", id);
+    return true;
+  });
+}
+
 export async function createPlayer(data: Omit<Player, "id" | "active" | "consentTextVersion" | "consentedAt" | "createdAt" | "updatedAt">, actor: string) {
   return transaction(async (client) => {
     const result = await client.query<Player>(`INSERT INTO players (first_name,last_name,phone,email,category,level,whatsapp_consent,consent_text_version,consented_at)

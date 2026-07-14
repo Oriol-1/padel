@@ -13,6 +13,8 @@ Esta entrega es un MVP ejecutable y preparado para una prueba real controlada. I
 - Tres modalidades: inscripción directa, disponibilidad y selección.
 - Enlaces personales firmados y con caducidad.
 - Página móvil para responder sin contraseña.
+- Área privada `Mis partidos` con acceso mediante el enlace personal.
+- Vista exclusiva de próximos partidos confirmados o seleccionados.
 - Control transaccional de plazas y lista de espera.
 - Selección manual de jugadores desde administración.
 - Gestión master para editar, duplicar y eliminar convocatorias.
@@ -102,6 +104,7 @@ pnpm start
 10. Regresa al panel y comprueba el estado actualizado.
 11. En una jornada de liga, cambia un jugador disponible a `Seleccionado`.
 12. Usa `Editar`, `Duplicar`, `Recordar a todos` o `Eliminar` desde el detalle de la convocatoria.
+13. Abre un enlace como jugador, responde y entra en `Mis partidos` para comprobar su calendario privado.
 
 Los recordatorios utilizan el canal de WhatsApp configurado. En modo `mock` se registran sin enviar mensajes; en modo `live` reutilizan la plantilla aprobada configurada para la convocatoria.
 

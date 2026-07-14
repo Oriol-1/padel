@@ -10,9 +10,15 @@ CREATE TABLE IF NOT EXISTS players (
   whatsapp_consent BOOLEAN NOT NULL DEFAULT FALSE,
   consent_text_version VARCHAR(20),
   consented_at TIMESTAMPTZ,
+  portal_link_version INTEGER NOT NULL DEFAULT 1,
+  portal_accessed_at TIMESTAMPTZ,
+  portal_access_revoked_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE players ADD COLUMN IF NOT EXISTS portal_link_version INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS portal_accessed_at TIMESTAMPTZ;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS portal_access_revoked_at TIMESTAMPTZ;
 CREATE INDEX IF NOT EXISTS idx_players_active_consent ON players(active, whatsapp_consent);
 
 CREATE TABLE IF NOT EXISTS events (
