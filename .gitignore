@@ -2,6 +2,8 @@ node_modules
 .next
 .env
 .env.local
+.env*.local
+.vercel
 *.log
 src/generated
 .DS_Store

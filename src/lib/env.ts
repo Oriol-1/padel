@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
+  DB_POOL_MAX: z.coerce.number().int().min(1).max(10).default(2),
   APP_URL: z.string().url(),
   ADMIN_EMAIL: z.string().email(),
   ADMIN_PASSWORD: z.string().optional(),
@@ -20,6 +21,7 @@ const envSchema = z.object({
 
 export const env = envSchema.parse({
   DATABASE_URL: process.env.DATABASE_URL,
+  DB_POOL_MAX: process.env.DB_POOL_MAX,
   APP_URL: process.env.APP_URL,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,

@@ -209,6 +209,8 @@ Utiliza un proxy inverso como Nginx o Caddy para HTTPS y limita el acceso direct
 
 ## Despliegue en Vercel
 
+Consulta la guía paso a paso en [`DESPLIEGUE_VERCEL.md`](DESPLIEGUE_VERCEL.md).
+
 1. Sube el proyecto a GitHub.
 2. Importa el repositorio en Vercel.
 3. Añade una base PostgreSQL compatible.

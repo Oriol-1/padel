@@ -3,6 +3,8 @@ import { getAdminSession } from "@/lib/auth";
 import { addAudit, getEventForSending, publishEvent } from "@/lib/repository";
 import { sendInvitation } from "@/lib/whatsapp";
 
+export const maxDuration = 60;
+
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const admin = await getAdminSession();
   if (!admin) return NextResponse.redirect(new URL("/admin/login", request.url), 303);
