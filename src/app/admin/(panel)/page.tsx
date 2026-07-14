@@ -5,7 +5,7 @@ import { formatShortDateTime, eventTypeLabel } from "@/lib/format";
 export default async function AdminDashboardPage() {
   const [stats, upcoming] = await Promise.all([getDashboardStats(), listUpcomingEvents(6)]);
   return <main className="page"><div className="container">
-    <div className="actions" style={{ justifyContent: "space-between", marginBottom: 22 }}><div><h1>Resumen</h1><p className="muted">Estado general de las convocatorias.</p></div><Link className="button button-primary" href="/admin/events/new">Nueva convocatoria</Link></div>
+    <div className="actions" style={{ justifyContent: "space-between", marginBottom: 28 }}><div><p className="eyebrow">Centro de control</p><h1>Resumen</h1><p className="muted">Estado general de las convocatorias.</p></div><Link className="button button-primary" href="/admin/events/new">Nueva convocatoria</Link></div>
     <section className="grid grid-3">
       <article className="card"><p className="muted">Jugadores activos</p><p className="metric">{stats.players}</p></article>
       <article className="card"><p className="muted">Convocatorias creadas</p><p className="metric">{stats.events}</p></article>

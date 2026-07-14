@@ -9,6 +9,8 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
     <main className="page">
       <div className="narrow">
         <section className="card">
+          <div className="brand-mark" style={{ marginBottom: 24 }}>P</div>
+          <p className="eyebrow">Área privada</p>
           <h1>Acceso de administración</h1>
           <p className="muted">Gestiona jugadores, partidas sueltas y jornadas de liga.</p>
           {env.DEMO_MODE ? <div className="alert alert-success">Modo visual sin base de datos.<br /><strong>Correo:</strong> demo@clubpadel.local<br /><strong>Contraseña:</strong> Demo123!</div> : null}
