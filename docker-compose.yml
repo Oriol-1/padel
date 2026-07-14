@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: padel
+      POSTGRES_USER: padel
+      POSTGRES_PASSWORD: padel
+    ports:
+      - "5432:5432"
+    volumes:
+      - padel_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U padel -d padel"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://padel:padel@db:5432/padel?schema=public
+      APP_URL: http://localhost:3000
+      ADMIN_EMAIL: admin@clubpadel.local
+      ADMIN_PASSWORD: Cambiar123!
+      SESSION_SECRET: cambia-esta-clave-por-una-de-al-menos-32-caracteres
+      CLUB_TIMEZONE: Europe/Madrid
+      CLUB_NAME: Club de Pádel Demo
+      WHATSAPP_MODE: mock
+    ports:
+      - "3000:3000"
+
+volumes:
+  padel_postgres:
