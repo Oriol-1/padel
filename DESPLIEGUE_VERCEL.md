@@ -24,6 +24,8 @@ No reutilices la base local de demostración.
 
 Configura estas variables en `Project Settings > Environment Variables`. Aplica las definitivas a `Production`; para `Preview` utiliza otra base o evita operaciones con datos reales.
 
+La compilación puede completarse sin secretos gracias a valores internos usados únicamente durante `next build`, pero la aplicación desplegada exige las variables reales para funcionar. Estos valores internos nunca se utilizan para atender peticiones.
+
 ```dotenv
 DATABASE_URL="postgresql://...?...sslmode=require"
 DB_POOL_MAX="2"
@@ -51,6 +53,8 @@ corepack pnpm hash:password -- 'UnaContraseñaLargaYUnica'
 Genera `SESSION_SECRET` con un gestor de contraseñas o un generador criptográfico. No uses el valor de `.env.example`.
 
 `APP_URL` debe coincidir con el dominio de producción y no debe terminar en `/`. Si después conectas un dominio propio, actualiza esta variable y vuelve a desplegar.
+
+Si omites `APP_URL` en Vercel, la aplicación intentará utilizar automáticamente `VERCEL_PROJECT_PRODUCTION_URL` o `VERCEL_URL`. Es preferible configurarla explícitamente cuando conectes el dominio definitivo.
 
 ## 4. Crear el esquema
 

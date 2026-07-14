@@ -19,14 +19,17 @@ const envSchema = z.object({
   WHATSAPP_TEMPLATE_LANGUAGE: z.string().default("es")
 });
 
+const isProductionBuild = process.env.NEXT_PHASE === "phase-production-build";
+const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+
 export const env = envSchema.parse({
-  DATABASE_URL: process.env.DATABASE_URL,
+  DATABASE_URL: process.env.DATABASE_URL ?? (isProductionBuild ? "postgresql://build:build@localhost:5432/build" : undefined),
   DB_POOL_MAX: process.env.DB_POOL_MAX,
-  APP_URL: process.env.APP_URL,
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+  APP_URL: process.env.APP_URL ?? (vercelHost ? `https://${vercelHost}` : undefined) ?? (isProductionBuild ? "http://localhost:3000" : undefined),
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? (isProductionBuild ? "build@example.com" : undefined),
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
   ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH,
-  SESSION_SECRET: process.env.SESSION_SECRET,
+  SESSION_SECRET: process.env.SESSION_SECRET ?? (isProductionBuild ? "build-only-secret-never-used-at-runtime" : undefined),
   CLUB_TIMEZONE: process.env.CLUB_TIMEZONE,
   CLUB_NAME: process.env.CLUB_NAME,
   WHATSAPP_MODE: process.env.WHATSAPP_MODE,
