@@ -27,10 +27,10 @@ export default async function EventDetailPage({ params, searchParams }: { params
       <div><p><Link href="/admin/events">← Convocatorias</Link></p><h1>{event.title}</h1><p className="muted">{eventTypeLabel(event.type)} · {responseModeLabel(event.responseMode)}</p></div>
       <div className="actions">
         <Link className="button button-secondary" href={`/admin/events/${event.id}/edit`}>Editar</Link>
-        <form action={`/api/admin/events/${event.id}/duplicate`} method="post"><button className="button button-secondary" type="submit">Duplicar</button></form>
-        <form action={`/api/admin/events/${event.id}/send`} method="post"><button className="button button-primary" type="submit">Enviar pendientes</button></form>
-        <form action={`/api/admin/events/${event.id}/remind`} method="post"><button className="button button-accent" type="submit">Recordar a todos</button></form>
-        <form action={`/api/admin/events/${event.id}/delete`} method="post"><button className="button button-danger" type="submit" title="Elimina también invitaciones y mensajes">Eliminar</button></form>
+        <form action={`/api/admin/events/${event.id}/duplicate`} method="post"><button className="button button-secondary" type="submit" disabled={env.DEMO_MODE}>Duplicar</button></form>
+        <form action={`/api/admin/events/${event.id}/send`} method="post"><button className="button button-primary" type="submit" disabled={env.DEMO_MODE}>Enviar pendientes</button></form>
+        <form action={`/api/admin/events/${event.id}/remind`} method="post"><button className="button button-accent" type="submit" disabled={env.DEMO_MODE}>Recordar a todos</button></form>
+        <form action={`/api/admin/events/${event.id}/delete`} method="post"><button className="button button-danger" type="submit" title="Elimina también invitaciones y mensajes" disabled={env.DEMO_MODE}>Eliminar</button></form>
       </div>
     </div>
     {query.sent ? <div className="alert alert-success">Proceso de envío completado. En modo de prueba se han generado mensajes y enlaces sin contactar con WhatsApp.</div> : null}
@@ -62,7 +62,7 @@ export default async function EventDetailPage({ params, searchParams }: { params
         <td><form action={`/api/admin/invitations/${invitation.id}/status`} method="post" className="actions">
           <select name="response" defaultValue={invitation.response} aria-label={`Estado de ${invitation.player.firstName}`}>
             {["PENDING", "AVAILABLE", "CONFIRMED", "WAITLISTED", "SELECTED", "NOT_SELECTED", "DECLINED", "CANCELLED"].map((value) => <option value={value} key={value}>{playerResponseLabel(value)}</option>)}
-          </select><input type="hidden" name="eventId" value={event.id} /><button className="button button-secondary" type="submit">Guardar</button>
+          </select><input type="hidden" name="eventId" value={event.id} /><button className="button button-secondary" type="submit" disabled={env.DEMO_MODE}>Guardar</button>
         </form></td>
       </tr>)}</tbody>
     </table></div></section>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getEventWithInvitations } from "@/lib/repository";
 import { utcToClubDateTimeInput } from "@/lib/time";
+import { env } from "@/lib/env";
 
 export default async function EditEventPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ error?: string; duplicated?: string }> }) {
   const { id } = await params;
@@ -26,7 +27,7 @@ export default async function EditEventPage({ params, searchParams }: { params: 
       <div className="field"><label htmlFor="category">Categoría</label><input id="category" name="category" defaultValue={event.category ?? ""} /></div>
       <div className="field"><label htmlFor="priceNote">Precio informativo</label><input id="priceNote" name="priceNote" defaultValue={event.priceNote ?? ""} /></div>
       <div className="field field-full"><label htmlFor="description">Descripción o indicaciones</label><textarea id="description" name="description" defaultValue={event.description ?? ""} /></div>
-      <div className="field-full actions"><button className="button button-primary" type="submit">Guardar cambios</button><Link className="button button-secondary" href={`/admin/events/${id}`}>Cancelar</Link></div>
+      <div className="field-full actions"><button className="button button-primary" type="submit" disabled={env.DEMO_MODE}>Guardar cambios</button><Link className="button button-secondary" href={`/admin/events/${id}`}>Cancelar</Link></div>
     </form>
   </div></main>;
 }

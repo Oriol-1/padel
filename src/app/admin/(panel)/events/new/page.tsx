@@ -1,4 +1,5 @@
 import { listPlayers } from "@/lib/repository";
+import { env } from "@/lib/env";
 
 
 export default async function NewEventPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
@@ -20,7 +21,7 @@ export default async function NewEventPage({ searchParams }: { searchParams: Pro
       <div className="field"><label htmlFor="priceNote">Precio informativo</label><input id="priceNote" name="priceNote" placeholder="8 € por jugador" /></div>
       <div className="field field-full"><label htmlFor="description">Descripción o indicaciones</label><textarea id="description" name="description" /></div>
       <div className="field field-full"><label>Jugadores convocados</label><div className="player-checks">{players.map((player) => <label className="player-check" key={player.id}><input type="checkbox" name="playerIds" value={player.id} defaultChecked={player.whatsappConsent} /><span><strong>{player.firstName} {player.lastName}</strong> · {player.category ?? "Sin grupo"} · {player.whatsappConsent ? "WhatsApp autorizado" : "sin autorización"}</span></label>)}</div></div>
-      <div className="field-full actions"><button className="button button-primary" type="submit">Crear convocatoria</button></div>
+      <div className="field-full actions"><button className="button button-primary" type="submit" disabled={env.DEMO_MODE}>Crear convocatoria</button></div>
     </form>
   </div></main>;
 }

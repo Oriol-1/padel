@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const envSchema = z.object({
+  DEMO_MODE: z.enum(["true", "false"]).default("false").transform((value) => value === "true"),
   DATABASE_URL: z.string().min(1),
   DB_POOL_MAX: z.coerce.number().int().min(1).max(10).default(2),
   APP_URL: z.string().url(),
@@ -19,17 +20,19 @@ const envSchema = z.object({
   WHATSAPP_TEMPLATE_LANGUAGE: z.string().default("es")
 });
 
+const demoMode = process.env.DEMO_MODE === "true";
 const isProductionBuild = process.env.NEXT_PHASE === "phase-production-build";
 const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
 
 export const env = envSchema.parse({
-  DATABASE_URL: process.env.DATABASE_URL ?? (isProductionBuild ? "postgresql://build:build@localhost:5432/build" : undefined),
+  DEMO_MODE: process.env.DEMO_MODE,
+  DATABASE_URL: process.env.DATABASE_URL ?? (isProductionBuild || demoMode ? "postgresql://demo:demo@localhost:5432/demo" : undefined),
   DB_POOL_MAX: process.env.DB_POOL_MAX,
-  APP_URL: process.env.APP_URL ?? (vercelHost ? `https://${vercelHost}` : undefined) ?? (isProductionBuild ? "http://localhost:3000" : undefined),
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? (isProductionBuild ? "build@example.com" : undefined),
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+  APP_URL: process.env.APP_URL ?? (vercelHost ? `https://${vercelHost}` : undefined) ?? (isProductionBuild || demoMode ? "http://localhost:3000" : undefined),
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? (demoMode ? "demo@clubpadel.local" : undefined) ?? (isProductionBuild ? "build@example.com" : undefined),
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ?? (demoMode ? "Demo123!" : undefined),
   ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH,
-  SESSION_SECRET: process.env.SESSION_SECRET ?? (isProductionBuild ? "build-only-secret-never-used-at-runtime" : undefined),
+  SESSION_SECRET: process.env.SESSION_SECRET ?? (demoMode ? "demo-only-session-secret-not-for-production" : undefined) ?? (isProductionBuild ? "build-only-secret-never-used-at-runtime" : undefined),
   CLUB_TIMEZONE: process.env.CLUB_TIMEZONE,
   CLUB_NAME: process.env.CLUB_NAME,
   WHATSAPP_MODE: process.env.WHATSAPP_MODE,

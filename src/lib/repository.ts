@@ -1,6 +1,8 @@
 import type { PoolClient } from "pg";
 import { query, transaction } from "@/lib/db";
 import type { EventRecord, Invitation, InvitationFull, OutboundMessage, Player } from "@/lib/types";
+import { env } from "@/lib/env";
+import { demoEvents, demoPlayers, getDemoEventDetail } from "@/lib/demo-data";
 
 const c = (alias: string | undefined, column: string) => alias ? `${alias}.${column}` : column;
 const playerSelect = (a?: string) => `${c(a,"id")} AS "id", ${c(a,"first_name")} AS "firstName", ${c(a,"last_name")} AS "lastName", ${c(a,"phone")} AS "phone", ${c(a,"email")} AS "email", ${c(a,"category")} AS "category", ${c(a,"level")} AS "level", ${c(a,"active")} AS "active",
@@ -17,6 +19,7 @@ const messageSelect = (a?: string) => `${c(a,"id")} AS "id", ${c(a,"invitation_i
   ${c(a,"read_at")} AS "readAt", ${c(a,"created_at")} AS "createdAt", ${c(a,"updated_at")} AS "updatedAt"`;
 
 export async function getDashboardStats() {
+  if (env.DEMO_MODE) return { players: demoPlayers.length, events: demoEvents.length, pending: 3 };
   const [players, events, pending] = await Promise.all([
     query<{ count: string }>("SELECT COUNT(*)::text AS count FROM players WHERE active = TRUE"),
     query<{ count: string }>("SELECT COUNT(*)::text AS count FROM events"),
@@ -26,6 +29,7 @@ export async function getDashboardStats() {
 }
 
 export async function listUpcomingEvents(limit = 6) {
+  if (env.DEMO_MODE) return demoEvents.filter((event) => event.startsAt >= new Date()).slice(0, limit);
   const result = await query<EventRecord & { invitationCount: string; answeredCount: string }>(`
     SELECT ${eventSelect("e")}, COUNT(i.id)::text AS "invitationCount",
       COUNT(i.id) FILTER (WHERE i.response <> 'PENDING')::text AS "answeredCount"
@@ -36,6 +40,7 @@ export async function listUpcomingEvents(limit = 6) {
 }
 
 export async function listPlayers(activeOnly = false) {
+  if (env.DEMO_MODE) return activeOnly ? demoPlayers.filter((player) => player.active) : demoPlayers;
   const result = await query<Player>(`SELECT ${playerSelect("p")} FROM players p ${activeOnly ? "WHERE p.active = TRUE" : ""} ORDER BY p.active DESC, p.category NULLS LAST, p.first_name ASC`);
   return result.rows;
 }
@@ -68,6 +73,7 @@ export async function deletePlayer(id: string, actor: string) {
 }
 
 export async function listEvents() {
+  if (env.DEMO_MODE) return demoEvents;
   const result = await query<EventRecord & { invitationCount: string; answeredCount: string }>(`
     SELECT ${eventSelect("e")}, COUNT(i.id)::text AS "invitationCount",
       COUNT(i.id) FILTER (WHERE i.response <> 'PENDING')::text AS "answeredCount"
@@ -135,6 +141,7 @@ export async function deleteEvent(id: string, actor: string) {
 }
 
 export async function getEventWithInvitations(id: string) {
+  if (env.DEMO_MODE) return getDemoEventDetail(id);
   const eventResult = await query<EventRecord>(`SELECT ${eventSelect("e")} FROM events e WHERE e.id=$1`, [id]);
   const event = eventResult.rows[0];
   if (!event) return null;
@@ -159,6 +166,14 @@ export async function getEventWithInvitations(id: string) {
 }
 
 export async function getInvitationFull(id: string): Promise<InvitationFull | null> {
+  if (env.DEMO_MODE) {
+    for (const event of demoEvents) {
+      const detail = getDemoEventDetail(event.id);
+      const invitation = detail?.invitations.find((item) => item.id === id);
+      if (invitation) return { ...invitation, event };
+    }
+    return null;
+  }
   const invResult = await query<Invitation>(`SELECT ${invitationSelect("i")} FROM invitations i WHERE i.id=$1`, [id]);
   const invitation = invResult.rows[0];
   if (!invitation) return null;
@@ -171,6 +186,7 @@ export async function getInvitationFull(id: string): Promise<InvitationFull | nu
 }
 
 export async function markInvitationOpened(id: string) {
+  if (env.DEMO_MODE) return;
   await query(`UPDATE invitations SET opened_at=COALESCE(opened_at,NOW()), status=CASE WHEN status='PENDING' THEN 'OPENED' ELSE status END, updated_at=NOW() WHERE id=$1`, [id]);
 }
 

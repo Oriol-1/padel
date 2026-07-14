@@ -211,6 +211,8 @@ Utiliza un proxy inverso como Nginx o Caddy para HTTPS y limita el acceso direct
 
 Consulta la guía paso a paso en [`DESPLIEGUE_VERCEL.md`](DESPLIEGUE_VERCEL.md).
 
+Mientras no haya PostgreSQL, el despliegue de Vercel funciona en modo visual con datos ficticios. Acceso demo: `demo@clubpadel.local` / `Demo123!`. En este modo las escrituras y los envíos están desactivados.
+
 1. Sube el proyecto a GitHub.
 2. Importa el repositorio en Vercel.
 3. Añade una base PostgreSQL compatible.

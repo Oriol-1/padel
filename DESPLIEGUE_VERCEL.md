@@ -1,5 +1,7 @@
 # Despliegue en Vercel
 
+El repositorio se publica inicialmente con `DEMO_MODE=true` en `vercel.json`. Este modo permite revisar el panel con datos ficticios sin PostgreSQL; no guarda cambios ni envía mensajes. Cuando conectes Neon, elimina esa variable de `vercel.json`, configura `DEMO_MODE=false` y vuelve a desplegar.
+
 ## 1. Importar el repositorio
 
 1. Entra en [Vercel](https://vercel.com/new).

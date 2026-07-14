@@ -1,4 +1,5 @@
 import { listPlayers } from "@/lib/repository";
+import { env } from "@/lib/env";
 
 export default async function PlayersPage({ searchParams }: { searchParams: Promise<{ created?: string; deleted?: string; error?: string }> }) {
   const params = await searchParams;
@@ -16,10 +17,10 @@ export default async function PlayersPage({ searchParams }: { searchParams: Prom
       <div className="field"><label htmlFor="category">Categoría o equipo</label><input id="category" name="category" /></div>
       <div className="field"><label htmlFor="level">Nivel</label><input id="level" name="level" /></div>
       <div className="field-full checkbox-row"><input id="whatsappConsent" name="whatsappConsent" value="true" type="checkbox" /><label htmlFor="whatsappConsent">El jugador ha autorizado recibir convocatorias y avisos deportivos por WhatsApp.</label></div>
-      <div className="field-full"><button className="button button-primary" type="submit">Guardar jugador</button></div>
+      <div className="field-full"><button className="button button-primary" type="submit" disabled={env.DEMO_MODE}>Guardar jugador</button></div>
     </form></section>
     <div className="table-wrap"><table><thead><tr><th>Jugador</th><th>Contacto</th><th>Grupo</th><th>Nivel</th><th>WhatsApp</th><th>Gestión master</th></tr></thead><tbody>
-      {players.map((player) => <tr key={player.id}><td><strong>{player.firstName} {player.lastName}</strong></td><td>{player.phone}<br /><span className="muted small">{player.email ?? "Sin correo"}</span></td><td>{player.category ?? "—"}</td><td>{player.level ?? "—"}</td><td>{player.whatsappConsent ? "Autorizado" : "No autorizado"}</td><td><form action={`/api/admin/players/${player.id}/delete`} method="post"><button className="button button-danger" type="submit" title="También elimina sus invitaciones y mensajes">Eliminar</button></form></td></tr>)}
+      {players.map((player) => <tr key={player.id}><td><strong>{player.firstName} {player.lastName}</strong></td><td>{player.phone}<br /><span className="muted small">{player.email ?? "Sin correo"}</span></td><td>{player.category ?? "—"}</td><td>{player.level ?? "—"}</td><td>{player.whatsappConsent ? "Autorizado" : "No autorizado"}</td><td><form action={`/api/admin/players/${player.id}/delete`} method="post"><button className="button button-danger" type="submit" title="También elimina sus invitaciones y mensajes" disabled={env.DEMO_MODE}>Eliminar</button></form></td></tr>)}
     </tbody></table></div>
   </div></main>;
 }

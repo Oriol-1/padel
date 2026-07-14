@@ -39,11 +39,12 @@ export default async function InvitationPage({ params, searchParams }: { params:
       {invitation.event.description ? <p>{invitation.event.description}</p> : null}
       {invitation.event.priceNote ? <p><strong>Aportación:</strong> {invitation.event.priceNote}</p> : null}
 
+      {env.DEMO_MODE ? <div className="alert alert-success">Vista de demostración: las respuestas están desactivadas hasta conectar PostgreSQL.</div> : null}
       {closed ? <div className="alert alert-error">La convocatoria ya está cerrada o ha superado la fecha límite.</div> : <form action={`/api/invitations/${token}/respond`} method="post" className="response-buttons">
-        {direct ? <button className="button button-primary" name="response" value="CONFIRMED" type="submit">Quiero apuntarme</button> : <button className="button button-primary" name="response" value="AVAILABLE" type="submit">Estoy disponible</button>}
-        <button className="button button-danger" name="response" value="DECLINED" type="submit">No puedo asistir</button>
+        {direct ? <button className="button button-primary" name="response" value="CONFIRMED" type="submit" disabled={env.DEMO_MODE}>Quiero apuntarme</button> : <button className="button button-primary" name="response" value="AVAILABLE" type="submit" disabled={env.DEMO_MODE}>Estoy disponible</button>}
+        <button className="button button-danger" name="response" value="DECLINED" type="submit" disabled={env.DEMO_MODE}>No puedo asistir</button>
         <label htmlFor="note">Observación opcional</label>
-        <textarea id="note" name="note" maxLength={500} placeholder="Por ejemplo: solo puedo jugar a partir de las 19:30" />
+        <textarea id="note" name="note" maxLength={500} placeholder="Por ejemplo: solo puedo jugar a partir de las 19:30" disabled={env.DEMO_MODE} />
       </form>}
       <p className="small muted" style={{ marginTop: 24 }}>Este enlace es personal. No lo reenvíes a otra persona.</p>
     </section>
