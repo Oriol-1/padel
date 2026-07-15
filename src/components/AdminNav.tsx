@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { BrandMark } from "@/components/BrandMark";
 
 const items = [
-  { href: "/admin", label: "Resumen", description: "Vista general", icon: "home" },
-  { href: "/admin/events", label: "Convocatorias", description: "Partidas y jornadas", icon: "calendar" },
-  { href: "/admin/events/new", label: "Nueva convocatoria", description: "Crear y seleccionar", icon: "plus", primary: true },
-  { href: "/admin/players", label: "Jugadores", description: "Plantilla del club", icon: "users" }
+  { href: "/admin", label: "Resumen", mobileLabel: "Inicio", description: "Vista general", icon: "home" },
+  { href: "/admin/events", label: "Convocatorias", mobileLabel: "Partidos", description: "Partidas y jornadas", icon: "calendar" },
+  { href: "/admin/events/new", label: "Nueva convocatoria", mobileLabel: "Nueva", description: "Crear y seleccionar", icon: "plus", primary: true },
+  { href: "/admin/players", label: "Jugadores", mobileLabel: "Jugadores", description: "Plantilla del club", icon: "users" }
 ];
 
 function NavIcon({ name }: { name: string }) {
@@ -44,7 +44,7 @@ export function AdminNav({ demoMode }: { demoMode: boolean }) {
         <p className="nav-section-label">Espacio de trabajo</p>
         {items.map((item) => <Link className={`nav-item ${item.primary ? "nav-item-primary" : ""} ${active(item.href) ? "is-active" : ""}`} href={item.href} key={item.href} aria-current={active(item.href) ? "page" : undefined}>
           <span className="nav-icon-wrap"><NavIcon name={item.icon} /></span>
-          <span className="nav-copy"><strong>{item.label}</strong><small>{item.description}</small></span>
+          <span className="nav-copy"><strong><span className="desktop-nav-label">{item.label}</span><span className="mobile-nav-label">{item.mobileLabel}</span></strong><small>{item.description}</small></span>
         </Link>)}
       </nav>
       <div className="sidebar-footer">

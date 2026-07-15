@@ -16,12 +16,11 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
           <p className="eyebrow">Área privada</p>
           <h1>Acceso de administración</h1>
           <p className="muted">Gestiona jugadores, partidas sueltas y jornadas de liga.</p>
-          {env.DEMO_MODE ? <div className="alert alert-success" role="status">Acceso temporal para pruebas.<br /><strong>Correo:</strong> {env.ADMIN_EMAIL}<br /><strong>Contraseña:</strong> {testPassword || "Configurada mediante hash"}</div> : null}
           {params.error ? <div className="alert alert-error" role="alert">Correo o contraseña incorrectos.</div> : null}
           <form action="/api/auth/login" method="post" className="form-grid">
             <div className="field field-full">
               <label htmlFor="email">Correo</label>
-               <input id="email" name="email" type="email" autoComplete="username" defaultValue={env.DEMO_MODE ? env.ADMIN_EMAIL : ""} autoFocus required />
+               <input id="email" name="email" type="email" autoComplete="username" defaultValue={env.DEMO_MODE ? env.ADMIN_EMAIL : ""} required />
             </div>
             <div className="field field-full">
               <label htmlFor="password">Contraseña</label>

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Gestión de convocatorias e inscripciones para partidas sueltas y jornadas de liga de pádel."
 };
 
-export const viewport: Viewport = { themeColor: "#0b241a", colorScheme: "light" };
+export const viewport: Viewport = { themeColor: "#0b241a", colorScheme: "light", viewportFit: "cover" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

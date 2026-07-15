@@ -43,6 +43,7 @@ export function playerResponseLabel(response: string) {
 export function eventStatusLabel(status: string) {
   const labels: Record<string, string> = {
     DRAFT: "Borrador",
+    PUBLISHED: "Publicada",
     OPEN: "Abierta",
     CLOSED: "Cerrada",
     CANCELLED: "Cancelada"
