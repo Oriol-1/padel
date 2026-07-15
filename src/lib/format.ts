@@ -39,3 +39,26 @@ export function playerResponseLabel(response: string) {
   };
   return labels[response] ?? response;
 }
+
+export function eventStatusLabel(status: string) {
+  const labels: Record<string, string> = {
+    DRAFT: "Borrador",
+    OPEN: "Abierta",
+    CLOSED: "Cerrada",
+    CANCELLED: "Cancelada"
+  };
+  return labels[status] ?? status;
+}
+
+export function messageStatusLabel(status: string) {
+  const labels: Record<string, string> = {
+    PENDING: "Pendiente",
+    CREATED: "Preparado",
+    SENT: "Enviado",
+    DELIVERED: "Entregado",
+    READ: "Leído",
+    FAILED: "Error",
+    OPENED: "Abierto"
+  };
+  return labels[status] ?? status;
+}

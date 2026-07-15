@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BrandMark } from "@/components/BrandMark";
 
 const items = [
   { href: "/admin", label: "Resumen", description: "Vista general", icon: "home" },
@@ -32,12 +33,12 @@ export function AdminNav({ demoMode }: { demoMode: boolean }) {
 
   return <>
     <header className="mobile-admin-bar">
-      <Link className="brand" href="/admin"><span className="brand-mark">P</span><span>Panel de pádel</span></Link>
+      <Link className="brand" href="/admin"><BrandMark /><span>Panel de pádel</span></Link>
       <form action="/api/auth/logout" method="post"><button className="mobile-logout" type="submit" aria-label="Cerrar sesión"><NavIcon name="logout" /></button></form>
     </header>
     <aside className="admin-sidebar">
       <div className="sidebar-brand">
-        <Link className="brand" href="/admin"><span className="brand-mark">P</span><span><strong>Panel de pádel</strong><small>Gestión deportiva</small></span></Link>
+        <Link className="brand" href="/admin"><BrandMark /><span><strong>Panel de pádel</strong><small>Gestión deportiva</small></span></Link>
       </div>
       <nav className="sidebar-nav" aria-label="Administración">
         <p className="nav-section-label">Espacio de trabajo</p>
